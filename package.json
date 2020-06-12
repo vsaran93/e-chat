@@ -1,0 +1,23 @@
+{
+  "name": "e-chatapp",
+  "version": "1.0.0",
+  "description": "this online messaging platform",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vsaran93/E-chatApp.git"
+  },
+  "author": "vishnu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vsaran93/E-chatApp/issues"
+  },
+  "homepage": "https://github.com/vsaran93/E-chatApp#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
