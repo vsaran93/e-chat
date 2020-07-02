@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      trim: true
+      trim: true,
     },
     password: {
       type: String,
@@ -18,17 +18,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       maxlength: 128,
       required: true,
-      trim: true
+      trim: true,
     },
     lastName: {
       type: String,
       maxlength: 128,
       required: true,
-      trim: true
+      trim: true,
     },
     picture: {
       type: String,
-      trim: true
+      trim: true,
     },
   },
   {
@@ -36,5 +36,11 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-
-module.exports = mongoose.model('User', userSchema);
+userSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (doc, ret) {
+    delete ret._id, delete ret.password;
+  },
+});
+module.exports = mongoose.model("User", userSchema);
