@@ -2,7 +2,10 @@ const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
-const port = 3007;
+const { port } = require('./config/vars');
+const mongoose = require('./config/mongoose');
+
+mongoose.connect();
 
 app.get("/", (req, res) => {
   res.send("server is up !");
