@@ -7,12 +7,15 @@ module.exports.register = async function (req, res) {
     case status.BAD_REQUEST:
       res.status(400);
       res.json({ msg: user.msg });
+      break;
     case status.SERVICE_UNAVAILABLE:
       res.status(500);
       res.json({ msg: "something went wrong" });
+      break;
     default:
       res.status(200);
       res.json({ data: user });
+      break;
   }
 };
 
@@ -22,14 +25,18 @@ module.exports.login = async function (req, res) {
     case status.NOT_FOUND:
       res.status(404);
       res.json({ msg: user.msg });
+      break;
     case status.BAD_REQUEST:
       res.status(400);
       res.json({ msg: user.msg });
+      break;
     case status.SERVICE_UNAVAILABLE:
       res.status(500);
       res.json({ msg: "something went wrong" });
+      break;
     default:
       res.status(200);
       res.json({ data: user });
+      break;
   }
 };

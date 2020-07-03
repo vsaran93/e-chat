@@ -77,8 +77,8 @@ class UserService {
     );
   }
   async getHashedPassword(plainPassword) {
-    return new Promise(function (resolve, reject) {
-      bcrypt.hash(plainPassword, saltRounds, function (hash, error) {
+    return await new Promise(function (resolve, reject) {
+      bcrypt.hash(plainPassword, saltRounds, function (error, hash) {
         if (error) {
           reject(error);
         }
