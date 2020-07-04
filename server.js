@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.get("/", (req, res) => {
   res.send("server is up !");
 });
-app.use("/api/v1", routes);
+app.use("/v1/api", routes);
 io.on("connection", (socket) => {
   console.log("a user connected.....!");
 });
