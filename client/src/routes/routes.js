@@ -3,9 +3,11 @@ import { Switch, Redirect } from "react-router-dom";
 
 import RouteWithLayout from "../components/RouteWithLayout";
 import AuthLayout from "../layouts/AuthLayout";
+import MainLayout from "../layouts/MainLayout";
 
 import Register from "../components/Auth/Register";
 import Login from "../components/Auth/Login";
+import Home from "../components/Home/Home";
 
 const Routes = () => {
   return (
@@ -22,6 +24,12 @@ const Routes = () => {
         exact
         layout={AuthLayout}
         path="/sign-in"
+      />
+      <RouteWithLayout
+        component={Home}
+        exact
+        layout={MainLayout}
+        path="/home"
       />
     </Switch>
   );

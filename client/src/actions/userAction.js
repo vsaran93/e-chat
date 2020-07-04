@@ -1,9 +1,11 @@
 import axios from "axios";
-import { SET_USER_DETAILS } from "../utils/types";
+import { SET_USER_DETAILS, SET_HOME_ROUTE } from "../utils/types";
 
+const api = 'http://localhost:3005/v1/api';
 const headers = {
   "Content-Type": "application/json",
 };
+const homeRoute = "/home";
 
 export const setUserDetails = (data) => {
   return {
@@ -11,10 +13,31 @@ export const setUserDetails = (data) => {
     data: data,
   };
 };
+
+export const navigateToHome = () => {
+  return {
+    type: SET_HOME_ROUTE,
+    data: homeRoute,
+  };
+};
+
 export const register = (userData) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post("/user/register", userData, headers);
+      const result = await axios.post(`${api}/user/register`, userData, headers);
+      if (result) {
+        dispatch(setUserDetails(result.data.data.response));
+        dispatch(navigateToHome());
+      }
+    } catch (error) {
+      console.log("there is an error", error);
+    }
+  };
+};
+export const login = (userData) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post("/user/login", userData, headers);
       if (response) {
         dispatch(setUserDetails(response.data.user));
       }
@@ -23,15 +46,3 @@ export const register = (userData) => {
     }
   };
 };
-export const login = (userData) => {
-    return async (dispatch) => {
-      try {
-        const response = await axios.post("/user/login", userData, headers);
-        if (response) {
-          dispatch(setUserDetails(response.data.user));
-        }
-      } catch (error) {
-        console.log("there is an error", error);
-      }
-    };
-  };

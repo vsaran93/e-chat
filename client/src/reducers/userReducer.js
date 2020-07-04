@@ -1,6 +1,7 @@
-import { SET_USER_DETAILS } from "../utils/types";
+import { SET_USER_DETAILS, SET_HOME_ROUTE } from "../utils/types";
 const initialState = {
   userData: {},
+  redirectTo: '',
 };
 
 const userReducer = (state = initialState, action) => {
@@ -9,6 +10,11 @@ const userReducer = (state = initialState, action) => {
       return {
         userData: action.data,
       };
+    case SET_HOME_ROUTE:
+      return {
+        ...state,
+        redirectTo: action.data
+      }
     default:
       return state;
   }
