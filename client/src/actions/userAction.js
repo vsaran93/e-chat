@@ -37,9 +37,10 @@ export const register = (userData) => {
 export const login = (userData) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post("/user/login", userData, headers);
+      const response = await axios.post(`${api}/user/login`, userData, headers);
       if (response) {
-        dispatch(setUserDetails(response.data.user));
+        dispatch(setUserDetails(response.data.data.user));
+        dispatch(navigateToHome());
       }
     } catch (error) {
       console.log("there is an error", error);

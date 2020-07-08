@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useDispatch, useSelector } from 'react-redux';
+import { userActions } from '../../actions/index';
 
 function Copyright() {
   return (
@@ -46,9 +48,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Login(props) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const initialState = {
+    email: '',
+    password: ''
+  }
+  const [ data, setData ] = useState(initialState);
 
+  const handleChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value
+    })
+  }
+  const handleSumbit = (e) => {
+    e.preventDefault();
+    dispatch(userActions.login(data))
+  }
+  if (user.redirectTo) {
+    props.history.push(user.redirectTo);
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -59,7 +81,7 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form onSubmit={handleSumbit} className={classes.form} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
@@ -70,6 +92,8 @@ export default function Login() {
             name="email"
             autoComplete="email"
             autoFocus
+            value={data.email}
+            onChange={handleChange}
           />
           <TextField
             variant="outlined"
@@ -81,6 +105,8 @@ export default function Login() {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={data.password}
+            onChange={handleChange}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
