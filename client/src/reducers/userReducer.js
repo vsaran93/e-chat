@@ -1,4 +1,6 @@
-import { SET_USER_DETAILS, SET_HOME_ROUTE } from "../utils/types";
+import { SET_USER_DETAILS, SET_HOME_ROUTE, USER_LOGOUT } from "../utils/types";
+import { decodeToken } from '../utils/helper';
+
 const initialState = {
   userData: {},
   redirectTo: '',
@@ -7,17 +9,31 @@ const initialState = {
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_USER_DETAILS:
+      storeToken(action.data);
+      const userData = decodeToken(action.data.token);
       return {
-        userData: action.data,
+        ...state,
+        userData: userData,
       };
     case SET_HOME_ROUTE:
       return {
         ...state,
         redirectTo: action.data
       }
+    case USER_LOGOUT:
+      clearToken();
+      break;
     default:
       return state;
   }
 };
 
+const storeToken = (data) => {
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('RereshToken', data.refreshToken);
+}
+
+const clearToken = () => {
+  localStorage.clear();
+}
 export default userReducer;

@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Redirect } from "react-router-dom";
 
 import RouteWithLayout from "../components/RouteWithLayout";
+import PrivateRouteLayout from '../components/RouteWithLayout/privateRouteLayout';
 import AuthLayout from "../layouts/AuthLayout";
 import MainLayout from "../layouts/MainLayout";
 
@@ -25,7 +26,7 @@ const Routes = () => {
         layout={AuthLayout}
         path="/sign-in"
       />
-      <RouteWithLayout
+      <PrivateRouteLayout
         component={Home}
         exact
         layout={MainLayout}

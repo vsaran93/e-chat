@@ -1,7 +1,6 @@
 import axios from "axios";
-import { SET_USER_DETAILS, SET_HOME_ROUTE } from "../utils/types";
+import { SET_USER_DETAILS, SET_HOME_ROUTE, USER_LOGOUT } from "../utils/types";
 
-// const api = 'http://localhost:3005/v1/api';
 const headers = {
   "Content-Type": "application/json",
 };
@@ -21,6 +20,12 @@ export const navigateToHome = () => {
   };
 };
 
+export const logout = () => {
+  return {
+    type: USER_LOGOUT
+  }
+}
+
 export const register = (userData) => {
   return async (dispatch) => {
     try {
@@ -39,7 +44,7 @@ export const login = (userData) => {
     try {
       const response = await axios.post(`api/user/login`, userData, headers);
       if (response) {
-        dispatch(setUserDetails(response.data.data.user));
+        dispatch(setUserDetails(response.data.data));
         dispatch(navigateToHome());
       }
     } catch (error) {

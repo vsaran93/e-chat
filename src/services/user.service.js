@@ -47,7 +47,7 @@ class UserService {
         );
         if (match) {
           const token = this.generateToken(registeredUser);
-          const refreshToken = this.generateRefreshToken(result);
+          const refreshToken = this.generateRefreshToken(registeredUser);
           await refreshToken.save();
           return {
             auth: true,
@@ -70,7 +70,7 @@ class UserService {
       };
     }
   }
-  async getUsers() {
+  async getAllUsers() {
     return await User.find();
   }
   async getUserById(id) {
@@ -105,7 +105,7 @@ class UserService {
   async passwordCompare(password, hashedPassword) {
     return await bcrypt.compare(password, hashedPassword);
   }
-  async generateRefreshToken(user) {
+  generateRefreshToken(user) {
     return new RefreshToken({
       userId: user._id,
       token: this.randomTokenString(),
