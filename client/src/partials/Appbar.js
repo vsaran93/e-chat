@@ -174,9 +174,9 @@ export default function PrimarySearchAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
+            E-CHat 
           </Typography>
-          <div className={classes.search}>
+          {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -188,7 +188,7 @@ export default function PrimarySearchAppBar() {
               }}
               inputProps={{ 'aria-label': 'search' }}
             />
-          </div>
+          </div> */}
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">

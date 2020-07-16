@@ -14,4 +14,6 @@ module.exports = {
         : process.env.MONGO_URI,
   },
   logs: process.env.NODE_ENV === "production" ? "combined" : "dev",
+  secret: 'echatapp',
+  expireInterval: 3600,
 };
