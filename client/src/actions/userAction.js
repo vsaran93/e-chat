@@ -21,10 +21,14 @@ export const navigateToHome = () => {
 };
 
 export const logout = () => {
-  return {
-    type: USER_LOGOUT
-  }
-}
+  return async (dispatch) => {
+    try {
+      dispatch({ type: USER_LOGOUT });
+    } catch (error) {
+      console.log("there is an error", error);
+    }
+  };
+};
 
 export const register = (userData) => {
   return async (dispatch) => {

@@ -22,7 +22,10 @@ const userReducer = (state = initialState, action) => {
       }
     case USER_LOGOUT:
       clearToken();
-      break;
+      return {
+        userData: {},
+        redirectTo: '',
+      }
     default:
       return state;
   }

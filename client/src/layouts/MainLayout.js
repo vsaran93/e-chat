@@ -6,7 +6,7 @@ const MainLayout = (props) => {
   const { children } = props;
   return (
     <Fragment>
-      <Appbar />
+      <Appbar {...props} />
       <main>{children}</main>
     </Fragment>
   );

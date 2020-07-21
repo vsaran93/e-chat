@@ -10,7 +10,7 @@ import Register from "../components/Auth/Register";
 import Login from "../components/Auth/Login";
 import Home from "../components/Home/Home";
 
-const Routes = () => {
+const Routes = (props) => {
   return (
     <Switch>
       <Redirect exact from="/" to="/sign-in" />
@@ -31,6 +31,7 @@ const Routes = () => {
         exact
         layout={MainLayout}
         path="/home"
+        {...props}
       />
     </Switch>
   );

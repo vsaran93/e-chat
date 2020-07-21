@@ -11,7 +11,7 @@ const PrivateRouteLayout = ({
       {...rest}
       render={(props) =>
         localStorage.getItem("token") ? (
-          <Layout>
+          <Layout {...rest}>
             <Component {...props} />
           </Layout>
         ) : (
