@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
@@ -13,6 +13,9 @@ import ChatNavBar from "../../partials/ChatNavBar";
 import FormControl from "@material-ui/core/FormControl";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import SendIcon from "@material-ui/icons/Send";
+import AddCommentOutlinedIcon from "@material-ui/icons/AddCommentOutlined";
+import UserListModal from "./UserListModal";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,23 +24,59 @@ const useStyles = makeStyles((theme) => ({
   mainContainer: {
     backgroundColor: "#e0e0e0",
     marginTop: "50px",
+    minHeight: "630px",
   },
   inline: {
     display: "inline",
   },
   textBox: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column'
-  }
+    height: "570px",
+    display: "flex",
+    flexDirection: "column",
+  },
+  sendButton: {
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addMsgIcon: {
+    position: "relative",
+    float: "right",
+    cursor: "pointer",
+    zIndex: 100,
+  },
+  welcomeBanner: {
+    height: "570px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  rightSidePanel: {
+    backgroundColor: "#eeeeee",
+  },
 }));
 const Home = () => {
+  const [openUserListModal, setOpenUserListModal] = useState(false);
+  const userSelector = useSelector((state) => state.user);
+  const toggleUserListModal = (value) => {
+    setOpenUserListModal(value);
+  };
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <Container className={classes.mainContainer}>
+        <Typography variant="h6" component="h2">
+          Chats
+        </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
+            <div
+              className={classes.addMsgIcon}
+              onClick={() => toggleUserListModal(true)}
+            >
+              <AddCommentOutlinedIcon />
+            </div>
             <List className={classes.root}>
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
@@ -88,31 +127,51 @@ const Home = () => {
               <Divider variant="inset" component="li" />
             </List>
           </Grid>
-          <Grid item xs={12} sm={8}>
-            <div className={classes.textBox}>
-              <ChatNavBar />
-              {/* <!-- Messages --> */}
-              <div class="d-flex flex-column" id="messages"></div>
-              {/* <!-- Input --> */}
-              <div>
-                <FormControl
-                  fullWidth
-                  className={classes.margin}
-                  variant="outlined"
-                >
-                  <OutlinedInput
-                    id="outlined-adornment-amount"
-                    value={""}
-                    onChange={""}
-                    labelWidth={60}
-                  />
-                   <SendIcon />
-                </FormControl>
+          <Grid item xs={12} sm={8} className={classes.rightSidePanel}>
+            {userSelector.selectedUser ? (
+              <div className={classes.textBox}>
+                <ChatNavBar name={userSelector.selectedUser} />
+                <div class="d-flex flex-column" id="messages"></div>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={11}>
+                    <div>
+                      <FormControl
+                        fullWidth
+                        className={classes.margin}
+                        variant="outlined"
+                      >
+                        <OutlinedInput
+                          id="outlined-adornment-amount"
+                          value={""}
+                          onChange={""}
+                          labelWidth={60}
+                        />
+                      </FormControl>
+                    </div>
+                  </Grid>
+                  <Grid item xs={12} sm={1}>
+                    <div className={classes.sendButton}>
+                      <SendIcon />
+                    </div>
+                  </Grid>
+                </Grid>
               </div>
-            </div>
+            ) : (
+              <div className={classes.welcomeBanner}>
+                <p style={{ textAlign: "center", fontSize: "16px" }}>
+                  welcome to E-chat messaging App
+                  <br />
+                  start conversation with your favorite people
+                </p>
+              </div>
+            )}
           </Grid>
         </Grid>
       </Container>
+      <UserListModal
+        openUserListModal={openUserListModal}
+        toggleUserListModal={toggleUserListModal}
+      />
     </div>
   );
 };

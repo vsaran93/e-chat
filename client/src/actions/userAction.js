@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SET_USER_DETAILS, SET_HOME_ROUTE, USER_LOGOUT } from "../utils/types";
+import { SET_USER_DETAILS, SET_HOME_ROUTE, USER_LOGOUT, SELECT_USER } from "../utils/types";
 
 const headers = {
   "Content-Type": "application/json",
@@ -20,6 +20,12 @@ export const navigateToHome = () => {
   };
 };
 
+export const setUserToRightPanel = (data) => {
+  return {
+    type: SELECT_USER,
+    data: data
+  }
+}
 export const logout = () => {
   return async (dispatch) => {
     try {

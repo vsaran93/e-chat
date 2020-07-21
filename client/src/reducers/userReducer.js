@@ -1,9 +1,10 @@
-import { SET_USER_DETAILS, SET_HOME_ROUTE, USER_LOGOUT } from "../utils/types";
+import { SET_USER_DETAILS, SET_HOME_ROUTE, USER_LOGOUT, SELECT_USER } from "../utils/types";
 import { decodeToken } from '../utils/helper';
 
 const initialState = {
   userData: {},
   redirectTo: '',
+  selectedUser: '',
 };
 
 const userReducer = (state = initialState, action) => {
@@ -25,6 +26,11 @@ const userReducer = (state = initialState, action) => {
       return {
         userData: {},
         redirectTo: '',
+      }
+    case SELECT_USER: 
+      return {
+        ...state,
+        selectedUser: action.data
       }
     default:
       return state;
