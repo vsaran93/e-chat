@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
@@ -15,7 +15,8 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 import SendIcon from "@material-ui/icons/Send";
 import AddCommentOutlinedIcon from "@material-ui/icons/AddCommentOutlined";
 import UserListModal from "./UserListModal";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllUsers, getUserToken } from '../../actions/userAction';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,12 +58,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Home = () => {
+  const classes = useStyles();
   const [openUserListModal, setOpenUserListModal] = useState(false);
   const userSelector = useSelector((state) => state.user);
+  const authToken = getUserToken();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (authToken) {
+      dispatch(getAllUsers())
+    }   
+  }, [authToken])
+
   const toggleUserListModal = (value) => {
     setOpenUserListModal(value);
   };
-  const classes = useStyles();
   return (
     <div className={classes.root}>
       <Container className={classes.mainContainer}>

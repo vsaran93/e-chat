@@ -1,10 +1,17 @@
-import { SET_USER_DETAILS, SET_HOME_ROUTE, USER_LOGOUT, SELECT_USER } from "../utils/types";
-import { decodeToken } from '../utils/helper';
+import {
+  SET_USER_DETAILS,
+  SET_HOME_ROUTE,
+  USER_LOGOUT,
+  SELECT_USER,
+  SET_USERS_LIST,
+} from "../utils/types";
+import { decodeToken } from "../utils/helper";
 
 const initialState = {
   userData: {},
-  redirectTo: '',
-  selectedUser: '',
+  redirectTo: "",
+  selectedUser: "",
+  userList: [],
 };
 
 const userReducer = (state = initialState, action) => {
@@ -19,30 +26,35 @@ const userReducer = (state = initialState, action) => {
     case SET_HOME_ROUTE:
       return {
         ...state,
-        redirectTo: action.data
-      }
+        redirectTo: action.data,
+      };
     case USER_LOGOUT:
       clearToken();
       return {
         userData: {},
-        redirectTo: '',
-      }
-    case SELECT_USER: 
+        redirectTo: "",
+      };
+    case SELECT_USER:
       return {
         ...state,
-        selectedUser: action.data
-      }
+        selectedUser: action.data,
+      };
+    case SET_USERS_LIST:
+      return {
+        ...state,
+        userList: action.payload,
+      };
     default:
       return state;
   }
 };
 
 const storeToken = (data) => {
-  localStorage.setItem('token', data.token);
-  localStorage.setItem('RereshToken', data.refreshToken);
-}
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("RereshToken", data.refreshToken);
+};
 
 const clearToken = () => {
   localStorage.clear();
-}
+};
 export default userReducer;

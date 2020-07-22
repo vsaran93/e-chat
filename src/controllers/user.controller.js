@@ -40,3 +40,17 @@ module.exports.login = async function (req, res) {
       break;
   }
 };
+
+module.exports.getAllUers = async function (req, res) {
+  const user = await userService.getAllUsers();
+  switch (user) {
+    case status.SERVICE_UNAVAILABLE:
+      res.status(500);
+      res.json({ msg: "something went wrong" });
+      break;
+    default:
+      res.status(200);
+      res.json({ data: user });
+      break;
+  }
+};

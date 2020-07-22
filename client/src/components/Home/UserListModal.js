@@ -12,7 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import { setUserToRightPanel } from '../../actions/userAction';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 export default function DialogSelect(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const userDetails = useSelector((state) => state.user);
   const [name, setName] = React.useState('');
 
   const handleChange = (event) => {
@@ -43,6 +44,11 @@ export default function DialogSelect(props) {
     props.toggleUserListModal(false);
   };
 
+  const options = () => {
+    return userDetails.userList.map(a => (
+    <MenuItem key={a.id} value={a.firstName}><AccountCircleOutlinedIcon />{a.firstName}</MenuItem>
+    )) 
+  }
   return (
     <div>
       <Dialog disableBackdropClick disableEscapeKeyDown open={props.openUserListModal} onClose={handleClose}>
@@ -62,9 +68,7 @@ export default function DialogSelect(props) {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={"Rahul"}><AccountCircleOutlinedIcon /> Rahul</MenuItem>
-                <MenuItem value={"David"}><AccountCircleOutlinedIcon /> David</MenuItem>
-                <MenuItem value={"Micheal"}><AccountCircleOutlinedIcon /> Micheal</MenuItem>
+                {options()}
               </Select>
             </FormControl>
           </form>

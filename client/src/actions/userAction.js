@@ -1,9 +1,28 @@
 import axios from "axios";
-import { SET_USER_DETAILS, SET_HOME_ROUTE, USER_LOGOUT, SELECT_USER } from "../utils/types";
+import {
+  SET_USER_DETAILS,
+  SET_HOME_ROUTE,
+  USER_LOGOUT,
+  SELECT_USER,
+  SET_USERS_LIST,
+} from "../utils/types";
 
 const headers = {
   "Content-Type": "application/json",
 };
+
+export const getUserToken = () => {
+  return localStorage.getItem("token");
+};
+
+const setAuthHeader = () => {
+  return {
+    "headers": {
+      "x-access-token": getUserToken(),
+    }
+  };
+};
+
 const homeRoute = "/home";
 
 export const setUserDetails = (data) => {
@@ -23,9 +42,9 @@ export const navigateToHome = () => {
 export const setUserToRightPanel = (data) => {
   return {
     type: SELECT_USER,
-    data: data
-  }
-}
+    data: data,
+  };
+};
 export const logout = () => {
   return async (dispatch) => {
     try {
@@ -60,5 +79,25 @@ export const login = (userData) => {
     } catch (error) {
       console.log("there is an error", error);
     }
+  };
+};
+
+export const getAllUsers = () => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.get(`api/user/get-users`, setAuthHeader());
+      if (response) {
+        dispatch(setUserList(response.data.data));
+      }
+    } catch (error) {
+      console.log("there is an error", error);
+    }
+  };
+};
+
+export const setUserList = (payload) => {
+  return {
+    type: SET_USERS_LIST,
+    payload: payload,
   };
 };
