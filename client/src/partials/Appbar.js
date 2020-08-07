@@ -102,6 +102,7 @@ export default function PrimarySearchAppBar(props) {
 
   const handleMenuClose = async () => {
     await dispatch(logout());
+    props.socket.disconnect();
     navigateToLogin();
     setAnchorEl(null);
     handleMobileMenuClose();

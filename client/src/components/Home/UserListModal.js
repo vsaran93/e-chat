@@ -25,18 +25,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function DialogSelect(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const userDetails = useSelector((state) => state.user);
-  const [name, setName] = React.useState('');
+  const [selectedUserId, setSelectedUserId] = React.useState('');
 
   const handleChange = (event) => {
-    setName(event.target.value);
+    setSelectedUserId(event.target.value);
   };
 
   const handleOk = () => {
-    dispatch(setUserToRightPanel(name));
+    dispatch(setUserToRightPanel(selectedUserId));
     props.toggleUserListModal(false);
   }
 
@@ -45,10 +46,15 @@ export default function DialogSelect(props) {
   };
 
   const options = () => {
-    return userDetails.userList.map(a => (
-    <MenuItem key={a.id} value={a.firstName}><AccountCircleOutlinedIcon />{a.firstName}</MenuItem>
-    )) 
-  }
+    if (userDetails.userList && userDetails.userList.length > 0) {
+      return userDetails.userList.map((a) => (
+        <MenuItem key={a.id} value={a.id}>
+          <AccountCircleOutlinedIcon />
+          {a.firstName}
+        </MenuItem>
+      ));
+    }
+  };
   return (
     <div>
       <Dialog disableBackdropClick disableEscapeKeyDown open={props.openUserListModal} onClose={handleClose}>
@@ -61,7 +67,7 @@ export default function DialogSelect(props) {
                 fullWidth
                 labelId="demo-dialog-select-label"
                 id="demo-dialog-select"
-                value={name}
+                value={selectedUserId}
                 onChange={handleChange}
                 input={<Input />}
               >

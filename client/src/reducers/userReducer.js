@@ -10,7 +10,10 @@ import { decodeToken } from "../utils/helper";
 const initialState = {
   userData: {},
   redirectTo: "",
-  selectedUser: "",
+  selectedUser: {
+    name: '',
+    id: ''
+  },
   userList: [],
 };
 
@@ -35,9 +38,13 @@ const userReducer = (state = initialState, action) => {
         redirectTo: "",
       };
     case SELECT_USER:
+      const findUser = state.userList.find(a => a.id === action.data);
       return {
         ...state,
-        selectedUser: action.data,
+        selectedUser: {
+          name: findUser.firstName,
+          id: action.data
+        },
       };
     case SET_USERS_LIST:
       return {

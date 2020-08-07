@@ -7,7 +7,7 @@ import {
   SET_USERS_LIST,
 } from "../utils/types";
 
-const headers = {
+export const headers = {
   "Content-Type": "application/json",
 };
 

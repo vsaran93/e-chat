@@ -16,7 +16,10 @@ import SendIcon from "@material-ui/icons/Send";
 import AddCommentOutlinedIcon from "@material-ui/icons/AddCommentOutlined";
 import UserListModal from "./UserListModal";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllUsers, getUserToken } from '../../actions/userAction';
+import io from 'socket.io-client';
+import { getAllUsers, getUserToken, setUserDetails } from '../../actions/userAction';
+import { server_url } from '../../utils/config';
+import Appbar from '../../partials/Appbar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,14 +60,24 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#eeeeee",
   },
 }));
-const Home = () => {
+const Home = (props) => {
   const classes = useStyles();
   const [openUserListModal, setOpenUserListModal] = useState(false);
   const userSelector = useSelector((state) => state.user);
   const authToken = getUserToken();
   const dispatch = useDispatch();
+  const socket = io(server_url, { query: `token=${authToken}`});
   useEffect(() => {
     if (authToken) {
+      dispatch(
+        setUserDetails({
+          token: authToken,
+        })
+      );
+      console.log('check socket connection status....', socket.connected)
+      if (!socket.connected) {
+        socket.connect();
+      }
       dispatch(getAllUsers())
     }   
   }, [authToken])
@@ -72,8 +85,20 @@ const Home = () => {
   const toggleUserListModal = (value) => {
     setOpenUserListModal(value);
   };
+
+  const handleSend = (e) => {
+    e.preventDefault();
+    const messageObject = {
+      to: '',
+      subject: '',
+      chatType: 'new',
+      status: '',
+      text: ''
+    }
+  }
   return (
     <div className={classes.root}>
+      <Appbar {...props} socket={socket} />
       <Container className={classes.mainContainer}>
         <Typography variant="h6" component="h2">
           Chats
@@ -137,9 +162,9 @@ const Home = () => {
             </List>
           </Grid>
           <Grid item xs={12} sm={8} className={classes.rightSidePanel}>
-            {userSelector.selectedUser ? (
+            {userSelector.selectedUser.name ? (
               <div className={classes.textBox}>
-                <ChatNavBar name={userSelector.selectedUser} />
+                <ChatNavBar name={userSelector.selectedUser.name} />
                 <div class="d-flex flex-column" id="messages"></div>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={11}>
@@ -159,7 +184,7 @@ const Home = () => {
                     </div>
                   </Grid>
                   <Grid item xs={12} sm={1}>
-                    <div className={classes.sendButton}>
+                    <div className={classes.sendButton} onClick={handleSend}>
                       <SendIcon />
                     </div>
                   </Grid>
