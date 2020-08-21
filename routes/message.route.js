@@ -5,4 +5,5 @@ const messageController = require('../src/controllers/message.controller');
 
 
 router.post('/add', authenticate ,messageController.addMessage);
+router.get('/get-message-by-conversation', authenticate ,messageController.getMessageByConversation);
 module.exports = router;

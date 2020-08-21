@@ -18,7 +18,7 @@ export const sendMessage = (messageData) => {
       const result = await axios.post(
         `api/message/add`,
         messageData,
-        setAuthHeader
+        setAuthHeader()
       );
       if (result) {
         debugger;

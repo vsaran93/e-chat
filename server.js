@@ -7,6 +7,7 @@ const { port } = require("./config/vars");
 const mongoose = require("./config/mongoose");
 const routes = require("./routes");
 const cors = require("cors");
+const verifyUser = require('./src/middlewares/verifyUser');
 
 mongoose.connect();
 // parse application/x-www-form-urlencoded
@@ -20,17 +21,19 @@ app.get("/", (req, res) => {
 });
 app.use("/v1/api", routes);
 
-io.use((socket, next) => {
+let connectedUsers = [];
+io.use(async (socket, next) => {
   let token = socket.handshake.query.token;
-  if (token) {
+  let validateUser = await verifyUser(token)
+  if (validateUser.auth) {
+    connectedUsers.push({socketId: socket.id, userId: validateUser.user._id});
     return next();
   }
   return next(new Error("invalid token...!"));
 });
 
 io.on("connection", (socket) => {
-  let token = socket.handshake.query.token;
-  console.log("a user connected.....!",token);
+  console.log("a user connected.....!", connectedUsers);
 });
 
 http.listen(port, () => {

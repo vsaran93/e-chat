@@ -18,6 +18,7 @@ import UserListModal from "./UserListModal";
 import { useSelector, useDispatch } from "react-redux";
 import io from 'socket.io-client';
 import { getAllUsers, getUserToken, setUserDetails } from '../../actions/userAction';
+import { sendMessage  } from '../../actions/messageAction';
 import { server_url } from '../../utils/config';
 import Appbar from '../../partials/Appbar';
 
@@ -63,10 +64,17 @@ const useStyles = makeStyles((theme) => ({
 const Home = (props) => {
   const classes = useStyles();
   const [openUserListModal, setOpenUserListModal] = useState(false);
+  const [message, setMessage ] = useState('')
   const userSelector = useSelector((state) => state.user);
   const authToken = getUserToken();
   const dispatch = useDispatch();
-  const socket = io(server_url, { query: `token=${authToken}`});
+  let socket = '';
+  useEffect(() => {
+    if(authToken) {
+      socket = io(server_url, { query: `token=${authToken}`});
+      socket.connect();
+    }
+  }, [])
   useEffect(() => {
     if (authToken) {
       dispatch(
@@ -74,10 +82,6 @@ const Home = (props) => {
           token: authToken,
         })
       );
-      console.log('check socket connection status....', socket.connected)
-      if (!socket.connected) {
-        socket.connect();
-      }
       dispatch(getAllUsers())
     }   
   }, [authToken])
@@ -88,17 +92,29 @@ const Home = (props) => {
 
   const handleSend = (e) => {
     e.preventDefault();
-    const messageObject = {
-      to: '',
-      subject: '',
-      chatType: 'new',
-      status: '',
-      text: ''
+    if(message) {
+      const messageObject = {
+        to: userSelector.selectedUser.id,
+        subject: userSelector.selectedUser.name,
+        chatType: 'new',
+        status: '',
+        text: message
+      }
+      dispatch(sendMessage(messageObject));
     }
+  }
+  const handleSocketDisconnect = () => {
+    if(socket) {
+      return socket.disconnect();
+    }
+    return false;
+  }
+  const handleMessage = (e) => {
+    setMessage(e.target.value)
   }
   return (
     <div className={classes.root}>
-      <Appbar {...props} socket={socket} />
+      <Appbar {...props} disconnect={handleSocketDisconnect} />
       <Container className={classes.mainContainer}>
         <Typography variant="h6" component="h2">
           Chats
@@ -176,8 +192,8 @@ const Home = (props) => {
                       >
                         <OutlinedInput
                           id="outlined-adornment-amount"
-                          value={""}
-                          onChange={""}
+                          value={message}
+                          onChange={handleMessage}
                           labelWidth={60}
                         />
                       </FormControl>
