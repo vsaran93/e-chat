@@ -1,8 +1,15 @@
 const status = require("http-status");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const moment = require('moment');
 
 const User = require("../models/user.model");
+const RefreshToken = require('../models/refreshToken.model');
+
 const logger = require("../../config/logger");
+
+const { secret, expireInterval } = require('../../config/vars');
 
 const saltRounds = 10;
 
@@ -18,8 +25,11 @@ class UserService {
       }
       const user = new User(args);
       user.password = await this.getHashedPassword(args.password);
-      const response = await user.save();
-      return { response };
+      const result = await user.save();
+      const token = this.generateToken(result);
+      const refreshToken = this.generateRefreshToken(result);
+      await refreshToken.save();
+      return { auth: true, token, refreshToken: refreshToken.token };
     } catch (error) {
       logger.error("register error", error);
       return {
@@ -36,8 +46,14 @@ class UserService {
           registeredUser.password
         );
         if (match) {
+          const token = this.generateToken(registeredUser);
+          const refreshToken = this.generateRefreshToken(registeredUser);
+          await refreshToken.save();
           return {
+            auth: true,
             msg: "successfully loggedIn!",
+            token,
+            refreshToken: refreshToken.token
           };
         }
         return { responseCode: status.BAD_REQUEST, msg: "incorrect password" };
@@ -54,7 +70,7 @@ class UserService {
       };
     }
   }
-  async getUsers() {
+  async getAllUsers() {
     return await User.find();
   }
   async getUserById(id) {
@@ -77,8 +93,8 @@ class UserService {
     );
   }
   async getHashedPassword(plainPassword) {
-    return new Promise(function (resolve, reject) {
-      bcrypt.hash(plainPassword, saltRounds, function (hash, error) {
+    return await new Promise(function (resolve, reject) {
+      bcrypt.hash(plainPassword, saltRounds, function (error, hash) {
         if (error) {
           reject(error);
         }
@@ -88,6 +104,23 @@ class UserService {
   }
   async passwordCompare(password, hashedPassword) {
     return await bcrypt.compare(password, hashedPassword);
+  }
+  generateRefreshToken(user) {
+    return new RefreshToken({
+      userId: user._id,
+      token: this.randomTokenString(),
+      expires: this.tokenExpireDate(),
+    })
+  }
+  generateToken (user) {
+    return jwt.sign({ user }, secret, { expiresIn: expireInterval  })
+  }
+  randomTokenString () {
+    return crypto.randomBytes(40).toString('hex');
+  }
+  tokenExpireDate () {
+    const currentDate = new Date();
+    return moment(currentDate).add(2, 'hours');
   }
 }
 
