@@ -71,19 +71,19 @@ class UserService {
     }
   }
   async getAllUsers() {
-    return await User.find();
+    return User.find();
   }
   async getUserById(id) {
-    return await User.findOne({ _id: id });
+    return User.findOne({ _id: id });
   }
   async findUserByEmail(email) {
-    return await User.findOne({ email: email });
+    return User.findOne({ email: email });
   }
   async deleteUser(id) {
-    return await User.findByIdAndRemove(id);
+    return User.findByIdAndRemove(id);
   }
   async updateUserById(id, args) {
-    return await User.findOneAndUpdate(
+    return User.findOneAndUpdate(
       { _id: id },
       {
         firstName: args.firstName,
@@ -103,7 +103,7 @@ class UserService {
     });
   }
   async passwordCompare(password, hashedPassword) {
-    return await bcrypt.compare(password, hashedPassword);
+    return bcrypt.compare(password, hashedPassword);
   }
   generateRefreshToken(user) {
     return new RefreshToken({

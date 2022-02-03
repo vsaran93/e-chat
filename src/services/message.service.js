@@ -32,7 +32,7 @@ class MessageService {
   async getMessageByConversation(args) {
     try {
       const { conversationId } = args;
-      return await Message.find({ conversationId }, { text: 1, createdAt: 1, _id: 1 })
+      return Message.find({ conversationId }, { text: 1, createdAt: 1, _id: 1 })
     }
     catch(err) {
       logger.error('add messager error: ', err)
